@@ -1,0 +1,7 @@
+{
+    "TOKEN":"{INSERT TOKEN}",
+    "DIRECTORY":"./examplefolder/",
+    "QUOTES":"./quotes.txt",
+    "COIN_DIRECTORY":"./examplefolder/",
+    "GAMBINA":"./gambina.txt"
+}
