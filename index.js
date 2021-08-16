@@ -79,6 +79,23 @@ bot.onText(/\/äpö/,(msg) => {
 
 })
 
+bot.onText(/\/ryys/,(msg) => {
+
+    // Checks the time of the message and refers it to current time.
+    // Is used to ignore messages while the bot is offline.
+    // In this instance, the users messages are ignored if they are
+    // older than five seconds.
+
+    if (Date.now() - parseInt(msg.date)*1000 > 5000) {
+        return;
+    }
+
+    bot.sendPoll(msg.chat.id, "Mihkä tänää ryys?",
+                [("Pottiin"),("Kottiin"),("Kapina"), ("Penthouse")], 
+                {is_anonymous: "False"})
+
+})
+
 
 bot.onText(/\/viis/,(msg) => {
 
