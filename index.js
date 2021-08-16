@@ -16,7 +16,7 @@ let temp_files = fs.readdirSync(config.DIRECTORY);
 // Interacts with the user when the user gives /start command.
 // Creates a button containing a command, when pushed, user sends the
 // corresponding message.
-bot.onText(/\/start/, (msg) => {
+bot.onText(/\/start/i, (msg) => {
     
     bot.sendMessage(msg.chat.id, "hölökyn kölökyn", {
         "reply_markup": {
@@ -25,7 +25,7 @@ bot.onText(/\/start/, (msg) => {
         });       
 });
 
-bot.onText(/\/quote/, (msg) => {
+bot.onText(/\/quote/i, (msg) => {
 
     // Checks the time of the message and refers it to current time.
     // Is used to ignore messages while the bot is offline.
@@ -42,7 +42,7 @@ bot.onText(/\/quote/, (msg) => {
 })
 
 
-bot.onText(/\/addq/,(msg) => {
+bot.onText(/\/addq/i,(msg) => {
 
     // Checks the time of the message and refers it to current time.
     // Is used to ignore messages while the bot is offline.
@@ -62,7 +62,7 @@ bot.onText(/\/addq/,(msg) => {
 
 })
 
-bot.onText(/\/äpö/,(msg) => {
+bot.onText(/\/äpö/i,(msg) => {
 
     // Checks the time of the message and refers it to current time.
     // Is used to ignore messages while the bot is offline.
@@ -79,7 +79,7 @@ bot.onText(/\/äpö/,(msg) => {
 
 })
 
-bot.onText(/\/ryys/,(msg) => {
+bot.onText(/\/ryys/i,(msg) => {
 
     // Checks the time of the message and refers it to current time.
     // Is used to ignore messages while the bot is offline.
@@ -97,7 +97,7 @@ bot.onText(/\/ryys/,(msg) => {
 })
 
 
-bot.onText(/\/viis/,(msg) => {
+bot.onText(/\/viis/i,(msg) => {
 
     // Checks the time of the message and refers it to current time.
     // Is used to ignore messages while the bot is offline.
@@ -116,7 +116,7 @@ bot.onText(/\/viis/,(msg) => {
 
 
 
-bot.onText(/\/kolikko/,(msg) => {
+bot.onText(/\/kolikko/i,(msg) => {
 
     // Checks the time of the message and refers it to current time.
     // Is used to ignore messages while the bot is offline.
@@ -144,7 +144,7 @@ bot.onText(/\/kolikko/,(msg) => {
 })
 
 // Interacts with the user when given a /kaatuminen command.
- bot.onText(/\/kaatuminen/, (msg) => {
+ bot.onText(/\/kaatuminen/i, (msg) => {
      
     // Checks the time of the message and refers it to current time.
     // Is used to ignore messages while the bot is offline.
