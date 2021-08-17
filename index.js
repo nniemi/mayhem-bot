@@ -71,10 +71,13 @@ bot.onText(/\/äpö/i,(msg) => {
         return;
     }
 
+    let time = msg.text.substring(5)
+
+
 
     let link = config.FOOD_LINK
     
-    bot.sendPoll(msg.chat.id, "Mihkä tänää äpölle?",
+    bot.sendPoll(msg.chat.id, "Mihkä tänää äpölle " + time + "?",
                 [("Lé Reaktor"),("Newton"),("Hertsi")], 
                 {is_anonymous: "False"})
 
