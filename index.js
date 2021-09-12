@@ -73,12 +73,10 @@ bot.onText(/\/äpö/i,(msg) => {
 
     let time = msg.text.substring(5)
 
-
-
     let link = config.FOOD_LINK
     
     bot.sendPoll(msg.chat.id, "Mihkä tänää äpölle " + time + "?",
-                [("Lé Reaktor"),("Newton"),("Hertsi")], 
+                [("Lé Reaktor"),("Newton"),("Hertsi"),("Café tietokonehuone")], 
                 {is_anonymous: "False"})
 
     
@@ -86,6 +84,31 @@ bot.onText(/\/äpö/i,(msg) => {
                     {parse_mode: 'MarkdownV2', disable_web_page_preview: "True"} )
 
 })
+
+bot.onText(/\/ruokalista/i,(msg) => {
+
+    // Checks the time of the message and refers it to current time.
+    // Is used to ignore messages while the bot is offline.
+    // In this instance, the users messages are ignored if they are
+    // older than five seconds.
+
+    if (Date.now() - parseInt(msg.date)*1000 > 5000) {
+        return;
+    }
+
+    let time = msg.text.substring(5)
+
+    let link = config.FOOD_LINK
+    
+    // Sends a link to a food menu.
+    bot.sendMessage( msg.chat.id, "nauti " + link, 
+                    {parse_mode: 'MarkdownV2', disable_web_page_preview: "True"} )
+
+})
+
+
+
+
 
 bot.onText(/\/ryys/i,(msg) => {
 
@@ -98,6 +121,7 @@ bot.onText(/\/ryys/i,(msg) => {
         return;
     }
 
+    // Sends a poll to ask about where to drink.
     bot.sendPoll(msg.chat.id, "Mihkä tänää ryys?",
                 [("Pottiin"),("Kottiin"),("Kapina"), ("Penthouse")], 
                 {is_anonymous: "False"})
@@ -116,6 +140,7 @@ bot.onText(/\/viis/i,(msg) => {
         return;
     }
 
+    // Sends an empty gambina meeting template
     let filename = config.GAMBINA
     let message = fs.readFileSync(filename)
     bot.sendMessage(msg.chat.id,message)
@@ -138,13 +163,20 @@ bot.onText(/\/kolikko/i,(msg) => {
 
     // Randomizes an integer
    let random_num = Math.floor(Math.random() * 101)
+   
+   
+   // If random integer is between 0 and 49, sends a photo of tails
    if(random_num >= 0 && random_num <= 49) {
     let file = config.COIN_DIRECTORY + "kruuna.png" 
        bot.sendPhoto(msg.chat.id,fs.readFileSync(file), {caption: "kruuna boi"})
    } else if (random_num == 50) {
+
+    // Then again if integer is exactly 50, a rare coin will be sent.
     let file = config.COIN_DIRECTORY  + "mayhem.png" 
     bot.sendPhoto(msg.chat.id,fs.readFileSync(file), {caption: "mayhemii isosti, kellota"})
    } else {
+
+    // In other cases (between 51-100), a photo of heads will be posted.
     let file = config.COIN_DIRECTORY + "klaava.png" 
     bot.sendPhoto(msg.chat.id,fs.readFileSync(file), {caption: "klaava boi"})
    }
