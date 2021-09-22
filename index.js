@@ -1,4 +1,4 @@
-const config = require('./config.json');
+const config2 = require('./config2.json');
 const TelegramBot = require('node-telegram-bot-api');
 const fs = require('fs');
 
@@ -6,11 +6,11 @@ let lines = [];
 
 
 // Create a bot that uses 'polling' to fetch new updates
-const bot = new TelegramBot(config.TOKEN, {polling: true});
+const bot = new TelegramBot(config2.TOKEN, {polling: true});
 
 // Creates a temporary array which includes all the files from the 
 // directory. The array changes while running the bot.
-let temp_files = fs.readdirSync(config.DIRECTORY);
+let temp_files = fs.readdirSync(config2.DIRECTORY);
 
 
 // Interacts with the user when the user gives /start command.
@@ -36,7 +36,7 @@ bot.onText(/\/quote/i, (msg) => {
         return;
     }
 
-    let filename = config.QUOTES
+    let filename = config2.QUOTES
     bot.sendMessage(msg.chat.id,get_line(filename))
 
 })
@@ -45,12 +45,16 @@ bot.onText(/\/quote/i, (msg) => {
 bot.onText(/\keskiviikko/i, (msg) => {
 
 
+    if (Date.now() - parseInt(msg.date)*1000 > 5000) {
+        return;
+    }
+
     let juoma_array = ["kalja", "lonkero", "kahvi", "tee", "keitto", "siideri", "vesi", "iso olut", "mehu/energiajuoma", "limukka/vichy", "double salted vichy", "lämmin olut", "gatorade"]
-    let random_num = Math.floor(Math.random() * juoma_array.size()+1)
+    let random_num = Math.floor(Math.random() * 14)
 
 
-    bot.sendMessage(msg.chat.id,"Hyvää ja aurinkoista keskiviikkoa, tänään sinun kellottamasi juoma on tämä:" +  
-                    juoma_array[0] + "Nauti! Happy Happy Joy Joy @dumbblond")
+    bot.sendMessage(msg.chat.id,"Hyvää ja aurinkoista keskiviikkoa, tänään sinun kellottamasi juoma on tämä: " +  
+                    juoma_array[0].italics().bold() + "\nNauti! Happy Happy Joy Joy @dumbblond", {parse_mode: 'HTML'})
 
 
 })
@@ -67,7 +71,7 @@ bot.onText(/\/addq/i,(msg) => {
         return;
     }
 
-    let filename = config.QUOTES
+    let filename = config2.QUOTES
     let quote = msg.text.substring(6)
     fs.appendFileSync(filename, '\n' + quote)
     bot.sendMessage(msg.chat.id, "quottista")
@@ -87,7 +91,7 @@ bot.onText(/\/äpö/i,(msg) => {
 
     let time = msg.text.substring(5)
 
-    let link = config.FOOD_LINK
+    let link = config2.FOOD_LINK
     
     bot.sendPoll(msg.chat.id, "Mihkä tänää äpölle " + time + "?",
                 [("Lé Reaktor"),("Newton"),("Hertsi"),("Café tietokonehuone")], 
@@ -112,7 +116,7 @@ bot.onText(/\/ruokalista/i,(msg) => {
 
     let time = msg.text.substring(5)
 
-    let link = config.FOOD_LINK
+    let link = config2.FOOD_LINK
     
     // Sends a link to a food menu.
     bot.sendMessage( msg.chat.id, "nauti " + link, 
@@ -155,7 +159,7 @@ bot.onText(/\/viis/i,(msg) => {
     }
 
     // Sends an empty gambina meeting template
-    let filename = config.GAMBINA
+    let filename = config2.GAMBINA
     let message = fs.readFileSync(filename)
     bot.sendMessage(msg.chat.id,message)
 
@@ -181,17 +185,17 @@ bot.onText(/\/kolikko/i,(msg) => {
    
    // If random integer is between 0 and 49, sends a photo of tails
    if(random_num >= 0 && random_num <= 49) {
-    let file = config.COIN_DIRECTORY + "kruuna.png" 
+    let file = config2.COIN_DIRECTORY + "kruuna.png" 
        bot.sendPhoto(msg.chat.id,fs.readFileSync(file), {caption: "kruuna boi"})
    } else if (random_num == 50) {
 
     // Then again if integer is exactly 50, a rare coin will be sent.
-    let file = config.COIN_DIRECTORY  + "mayhem.png" 
+    let file = config2.COIN_DIRECTORY  + "mayhem.png" 
     bot.sendPhoto(msg.chat.id,fs.readFileSync(file), {caption: "mayhemii isosti, kellota"})
    } else {
 
     // In other cases (between 51-100), a photo of heads will be posted.
-    let file = config.COIN_DIRECTORY + "klaava.png" 
+    let file = config2.COIN_DIRECTORY + "klaava.png" 
     bot.sendPhoto(msg.chat.id,fs.readFileSync(file), {caption: "klaava boi"})
    }
 
@@ -214,14 +218,14 @@ bot.onText(/\/kolikko/i,(msg) => {
     // If the array is empty, it will be refilled.
     if (file_amount == 0) {
         bot.sendMessage(msg.chat.id, "vidusti kaatumista lol")
-        temp_files = fs.readdirSync(config.DIRECTORY);
+        temp_files = fs.readdirSync(config2.DIRECTORY);
     }
 
     // Creates a random index.
     var random = Math.floor(Math.random() * file_amount)
 
     // Determines the path for the video that will be sent to the user.
-    let file = config.DIRECTORY + temp_files[random]
+    let file = config2.DIRECTORY + temp_files[random]
 
     // Deletes the corresponding video from the files array to avoid
     // duplicate videos in the current loop.
