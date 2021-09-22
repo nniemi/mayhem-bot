@@ -1,9 +1,17 @@
 const config = require('./config.json');
 const TelegramBot = require('node-telegram-bot-api');
 const fs = require('fs');
+const cron = require('node-cron');
 
 let lines = [];
 
+
+if(!fs.existsSync("juomat.json"))
+    fs.writeFileSync("juomat.json", JSON.stringify({
+        drinks: ['lonkero', 'kahvi', 'tee', 'keitto', 'siideri', 'vesi',
+        'iso olut', 'mehu/energiajuoma', 'limukka/vichy', 'double salted vichy', 'lämmin olut', 'gatorade'],
+        next_drink: ''
+    }));
 
 // Create a bot that uses 'polling' to fetch new updates
 const bot = new TelegramBot(config.TOKEN, {polling: true});
@@ -41,24 +49,31 @@ bot.onText(/\/quote/i, (msg) => {
 
 })
 
+cron.schedule('0 9 * * 4', () => {
+    let drinks = JSON.parse(fs.readFileSync("juomat.json").toString());
+    let next_drink = drinks["drinks"][Math.floor(Math.random() * drinks["drinks"].length)];
+    drinks['next_drink'] = next_drink;
+    fs.writeFileSync("juomat.json", JSON.stringify(drinks));
 
-bot.onText(/\keskiviikko/i, (msg) => {
+    bot.sendMessage(-1001351660751,"Arpa kertoi ensi viikon juoman olevan: " + next_drink.bold().italics() , {parse_mode: 'HTML'});
+});
 
+cron.schedule('0 9 * * 3', () => {
+    let drinks = JSON.parse(fs.readFileSync("juomat.json").toString());
+    let drink = drinks["next_drink"];
+    let next_drink = drinks["drinks"].splice(Math.floor(Math.random() * drinks["drinks"].length), 1)[0];
+    drinks["next_drink"] = next_drink;
+    fs.writeFileSync("juomat.json", JSON.stringify(drinks));
 
-    if (Date.now() - parseInt(msg.date)*1000 > 5000) {
-        return;
-    }
+    let message = "Hyvää ja aurinkoista keskiviikkoa!\nTänään sinun kellottamasi juoma on tämä: " + drink.bold().italics() + "\nNauti! Happy Happy Joy Joy @dumbblond\n\n";
 
-    let juoma_array = ["kalja", "lonkero", "kahvi", "tee", "keitto", "siideri", "vesi", "iso olut", "mehu/energiajuoma", "limukka/vichy", "double salted vichy", "lämmin olut", "gatorade"]
-    let random_num = Math.floor(Math.random() * 14)
+    if (next_drink === undefined)
+        message += "Hyvää joulua! Ensi viikolla " + "glögi".bold().italics();
+    else
+        message += "Arpa kertoi ensi viikon juoman olevan: " + next_drink.bold().italics();
 
-
-    bot.sendMessage(msg.chat.id,"Hyvää ja aurinkoista keskiviikkoa, tänään sinun kellottamasi juoma on tämä: " +  
-                    juoma_array[0].italics().bold() + "\nNauti! Happy Happy Joy Joy @dumbblond", {parse_mode: 'HTML'})
-
-
-})
-
+    bot.sendMessage(-1001351660751, message, {parse_mode: 'HTML'});
+});
 
 bot.onText(/\/addq/i,(msg) => {
 
