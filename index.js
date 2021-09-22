@@ -42,6 +42,20 @@ bot.onText(/\/quote/i, (msg) => {
 })
 
 
+bot.onText(/\keskiviikko/i, (msg) => {
+
+
+    let juoma_array = ["kalja", "lonkero", "kahvi", "tee", "keitto", "siideri", "vesi", "iso olut", "mehu/energiajuoma", "limukka/vichy", "double salted vichy", "lämmin olut", "gatorade"]
+    let random_num = Math.floor(Math.random() * juoma_array.size()+1)
+
+
+    bot.sendMessage(msg.chat.id,"Hyvää ja aurinkoista keskiviikkoa, tänään sinun kellottamasi juoma on tämä:" +  
+                    juoma_array[0] + "Nauti! Happy Happy Joy Joy @dumbblond")
+
+
+})
+
+
 bot.onText(/\/addq/i,(msg) => {
 
     // Checks the time of the message and refers it to current time.
