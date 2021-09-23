@@ -49,15 +49,6 @@ bot.onText(/\/quote/i, (msg) => {
 
 })
 
-cron.schedule('0 9 * * 4', () => {
-    let drinks = JSON.parse(fs.readFileSync("juomat.json").toString());
-    let next_drink = drinks["drinks"][Math.floor(Math.random() * drinks["drinks"].length)];
-    drinks['next_drink'] = next_drink;
-    fs.writeFileSync("juomat.json", JSON.stringify(drinks));
-
-    bot.sendMessage(-1001351660751,"Arpa kertoi ensi viikon juoman olevan: " + next_drink.bold().italics() , {parse_mode: 'HTML'});
-});
-
 cron.schedule('0 9 * * 3', () => {
     let drinks = JSON.parse(fs.readFileSync("juomat.json").toString());
     let drink = drinks["next_drink"];
