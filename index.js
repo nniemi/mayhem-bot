@@ -5,6 +5,7 @@ const cron = require('node-cron');
 const puppeteer = require('puppeteer')
 
 let lines = [];
+let browser;
 
 
 if(!fs.existsSync("juomat.json"))
@@ -50,22 +51,7 @@ bot.onText(/\/quote/i, (msg) => {
 
 })
 
-cron.schedule('0 9 * * 3', () => {
-    let drinks = JSON.parse(fs.readFileSync("juomat.json").toString());
-    let drink = drinks["next_drink"];
-    let next_drink = drinks["drinks"].splice(Math.floor(Math.random() * drinks["drinks"].length), 1)[0];
-    drinks["next_drink"] = next_drink;
-    fs.writeFileSync("juomat.json", JSON.stringify(drinks));
 
-    let message = "Hyvää ja aurinkoista keskiviikkoa!\nTänään sinun kellottamasi juoma on tämä: " + drink.bold().italics() + "\nNauti! Happy Happy Joy Joy @dumbblond\n\n";
-
-    if (next_drink === undefined)
-        message += "Hyvää joulua! Ensi viikolla " + "glögi".bold().italics();
-    else
-        message += "Arpa kertoi ensi viikon juoman olevan: " + next_drink.bold().italics();
-
-    bot.sendMessage(-1001351660751, message, {parse_mode: 'HTML'});
-});
 
 bot.onText(/\/addq/i,(msg) => {
 
@@ -321,7 +307,7 @@ async function scrape(msg) {
 }
 async function get_tiktok_url(url)
 {
-    let browser;
+    
 
 
     if (!browser)
@@ -343,15 +329,15 @@ async function get_tiktok_url(url)
 }
 
 
-
 bot.onText(/\/tt/i,(msg) => {
 
     // Checks the time of the message and refers it to current time.
     // Is used to ignore messages while the bot is offline.
     // In this instance, the users messages are ignored if they are
     // older than five seconds.
-    const axios = require('axios');
 
+    const axios = require('axios');
+    
 
     if (Date.now() - parseInt(msg.date)*1000 > 5000) {
         return;
@@ -364,11 +350,10 @@ bot.onText(/\/tt/i,(msg) => {
             
                     
             bot.sendVideo(msg.chat.id,axios_response.data);
-        
-                           
-                    
-            
-           
    
+        }));
 
-}))});
+})
+
+
+    
