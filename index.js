@@ -2,6 +2,7 @@ const config2 = require('./config2.json');
 const TelegramBot = require('node-telegram-bot-api');
 const fs = require('fs');
 const cron = require('node-cron');
+const puppeteer = require('puppeteer')
 
 let lines = [];
 
@@ -304,7 +305,7 @@ bot.onText(/\/kolikko/i,(msg) => {
     
 
 async function scrape(msg) {
-    const puppeteer = require('puppeteer')
+    
    const browser = await puppeteer.launch({args: ['--no-sandbox']})
    const page = await browser.newPage()
 
@@ -318,4 +319,56 @@ async function scrape(msg) {
 
    browser.close()
 }
+async function get_tiktok_url(url)
+{
+    let browser;
 
+
+    if (!browser)
+        browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.goto('https://musicaldown.com/en/', { waitUntil: "domcontentloaded" });
+    await page.evaluate((url) => {
+        document.getElementsByClassName('input-field col s12')[0].children[0].value = url;
+        document.getElementsByClassName('input-field col s12')[1].children[0].click();
+    }, url);
+    await page.waitForNavigation({ waitUntil: "domcontentloaded" });
+    let direct_url = await page.evaluate(() => {
+        for (let elem of document.getElementsByClassName('btn'))
+            if (elem.innerText.includes('DIRECT LINK'))
+                return elem.href;
+    });
+    page.close();
+    return direct_url;
+}
+
+
+
+bot.onText(/\/tt/i,(msg) => {
+
+    // Checks the time of the message and refers it to current time.
+    // Is used to ignore messages while the bot is offline.
+    // In this instance, the users messages are ignored if they are
+    // older than five seconds.
+    const axios = require('axios');
+
+
+    if (Date.now() - parseInt(msg.date)*1000 > 5000) {
+        return;
+    }
+
+    let url = msg.text.substring(3)
+    
+    get_tiktok_url(url).then(direct_url =>
+        axios.get(direct_url, { responseType: 'arraybuffer' }).then(axios_response => {
+            
+                    
+            bot.sendVideo(msg.chat.id,axios_response.data);
+        
+                           
+                    
+            
+           
+   
+
+}))});
