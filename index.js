@@ -329,7 +329,7 @@ async function get_tiktok_url(url)
 }
 
 
-bot.onText(/\/tt/i,(msg) => {
+bot.onText(/(www\.tiktok\.com)|(vm\.tiktok\.com)/,(msg) => {
 
     // Checks the time of the message and refers it to current time.
     // Is used to ignore messages while the bot is offline.
@@ -343,7 +343,7 @@ bot.onText(/\/tt/i,(msg) => {
         return;
     }
 
-    let url = msg.text.substring(3)
+    let url = msg.text
     
     get_tiktok_url(url).then(direct_url =>
         axios.get(direct_url, { responseType: 'arraybuffer' }).then(axios_response => {
@@ -353,7 +353,7 @@ bot.onText(/\/tt/i,(msg) => {
    
         }));
 
-})
+});
 
 
     
