@@ -351,7 +351,7 @@ bot.onText(/(www\.tiktok\.com)|(vm\.tiktok\.com)/,(msg) => {
                     
             bot.sendVideo(msg.chat.id,axios_response.data);
    
-        }));
+        }).catch(console.error));
 
 });
 
